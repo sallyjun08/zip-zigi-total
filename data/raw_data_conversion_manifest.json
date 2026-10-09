@@ -1,0 +1,43 @@
+﻿{
+  "generated_at": "2026-07-16T16:20:18",
+  "source_dir": "C:\\AI career pass\\housing_real_data",
+  "output_dir": "C:\\AI career pass\\housing_real_data\\generated",
+  "source_files_unchanged": true,
+  "source_encodings": {
+    "notices": "utf-8-sig",
+    "income": "utf-8-sig",
+    "eligibility": "utf-8-sig",
+    "terms": "utf-8-sig",
+    "documents": "utf-8-sig"
+  },
+  "source_sha256": {
+    "notices": "1dcc1b8910056ec8d7ecef9162995526c1e2e6e558475a6d3c8e3f62628aa7de",
+    "income": "58c9ff98cb7eb1a20b81b4d9ef2094fdd4ed8970db25a378a013ecd6d0aec19c",
+    "eligibility": "f55743fad578aaa7ac61d2d9af91c13d48504f6ead2550e8c1b9428683f3f478",
+    "terms": "5fabd01ec4fa0945452d6c1820b16eb2eda35d08aad3677fddb56e3f4d44dc9f",
+    "documents": "60da50517f19a37ce90987dbf8138d433f4c1acf6acfec36b51893311c4492a3"
+  },
+  "output_sha256": {
+    "housing_supply_notice_master.csv": "ec3fd52037a097fd051720b2db92686393a7b83e09d2222d2dfb55284faf488c",
+    "housing_rag_chunks_review_ready.csv": "06bb0e3192d300929628ee696cf7f9bd58264cfc3e2e503172e2d439ec4cf33b",
+    "housing_document_master.csv": "cfb98037c11f8c3e46620a60ec090378b1c411b58c17cd700618d54369436bcd",
+    "housing_notice_document_rules_review_ready.csv": "41bb072e33e3d62e4051292494ac93efee8bfb97cfc0a7c9891a402ca94a3c2b",
+    "housing_terms.csv": "5fabd01ec4fa0945452d6c1820b16eb2eda35d08aad3677fddb56e3f4d44dc9f"
+  },
+  "counts": {
+    "raw_notices": 87,
+    "raw_income_rules": 193,
+    "raw_eligibility_rules": 193,
+    "raw_terms": 109,
+    "raw_document_rules": 1073,
+    "notice_master_rows": 193,
+    "rag_chunks": 2632,
+    "document_master_rows": 35,
+    "document_rule_rows": 1073
+  },
+  "notes": [
+    "원본 5개 CSV는 읽기 전용으로 사용했고 수정하지 않았습니다.",
+    "공고 원문 URL과 PDF 페이지 정보는 원본 데이터에 없으므로 생성하지 않았습니다.",
+    "해당자 서류 중 명확한 조건만 condition_json으로 추론했고 나머지는 조건 확인 후보로 유지합니다."
+  ]
+}

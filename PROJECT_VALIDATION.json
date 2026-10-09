@@ -1,0 +1,15 @@
+{
+  "project": "policy_bridge_v2",
+  "target_path": "C:\\AI career pass\\policy_bridge_v2",
+  "validated_at": "2026-07-16",
+  "python_syntax": "pass",
+  "hybrid_combination_test": "pass",
+  "keyword_retriever_test": "pass",
+  "recommendation_rag_integration": "pass",
+  "llm_explainer_validation": "pass",
+  "service_planner_join_and_conditions": "pass",
+  "default_embedding_model": "BAAI/bge-m3",
+  "default_rag_backend": "hybrid",
+  "hybrid_weights": {"dense": 0.70, "bm25": 0.30},
+  "sandbox_runtime_note": "streamlit and sentence-transformers were not installed in the validation container, so the Streamlit server and real BGE-M3 model download were not executed. setup_windows.ps1 installs them, and test_bge_m3_smoke.py performs the local model smoke test."
+}

@@ -1,0 +1,25 @@
+﻿chunk_id,notice_id,chunk_type,chunk_title,retrieval_text,source_file,source_page_start,source_page_end,review_status,is_latest
+NOTICE_LH_001_G1,NOTICE_LH_001,application_method,신청 방법,LH청약플러스 온라인 신청으로 진행하는 개발용 샘플입니다. 실제 공고를 확인하세요.,sample_lh_notice.pdf,2,2,미검수,True
+NOTICE_LH_001_G2,NOTICE_LH_001,submission_method,서류 제출,온라인 또는 별도 안내 방식의 개발용 샘플입니다.,sample_lh_notice.pdf,3,3,미검수,True
+NOTICE_LH_001_G3,NOTICE_LH_001,documents_common,공통 서류,주민등록표 등본과 가족관계증명서를 공통 준비 후보로 표시합니다.,sample_lh_notice.pdf,3,3,미검수,True
+NOTICE_LH_001_G4,NOTICE_LH_001,documents_conditional,조건부 서류,대학생·취업준비생·대리신청 여부에 따라 서류가 달라질 수 있습니다.,sample_lh_notice.pdf,4,4,미검수,True
+NOTICE_LH_001_G5,NOTICE_LH_001,caution,주의사항,이 데이터는 기능 검증용 샘플이며 실제 신청 자격이나 서류를 확정하지 않습니다.,sample_lh_notice.pdf,5,5,미검수,True
+NOTICE_LH_001_G6,NOTICE_LH_001,schedule,일정,접수 기간과 서류제출 기간은 실제 공식 공고에서 확인해야 합니다.,sample_lh_notice.pdf,2,2,미검수,True
+NOTICE_HAPPY_001_G1,NOTICE_HAPPY_001,application_method,신청 방법,LH청약플러스 온라인 신청으로 진행하는 개발용 샘플입니다. 실제 공고를 확인하세요.,sample_happy_notice.pdf,2,2,미검수,True
+NOTICE_HAPPY_001_G2,NOTICE_HAPPY_001,submission_method,서류 제출,온라인 또는 별도 안내 방식의 개발용 샘플입니다.,sample_happy_notice.pdf,3,3,미검수,True
+NOTICE_HAPPY_001_G3,NOTICE_HAPPY_001,documents_common,공통 서류,주민등록표 등본과 가족관계증명서를 공통 준비 후보로 표시합니다.,sample_happy_notice.pdf,3,3,미검수,True
+NOTICE_HAPPY_001_G4,NOTICE_HAPPY_001,documents_conditional,조건부 서류,대학생·취업준비생·대리신청 여부에 따라 서류가 달라질 수 있습니다.,sample_happy_notice.pdf,4,4,미검수,True
+NOTICE_HAPPY_001_G5,NOTICE_HAPPY_001,caution,주의사항,이 데이터는 기능 검증용 샘플이며 실제 신청 자격이나 서류를 확정하지 않습니다.,sample_happy_notice.pdf,5,5,미검수,True
+NOTICE_HAPPY_001_G6,NOTICE_HAPPY_001,schedule,일정,접수 기간과 서류제출 기간은 실제 공식 공고에서 확인해야 합니다.,sample_happy_notice.pdf,2,2,미검수,True
+NOTICE_JEONSE_001_G1,NOTICE_JEONSE_001,application_method,신청 방법,LH청약플러스 온라인 신청으로 진행하는 개발용 샘플입니다. 실제 공고를 확인하세요.,sample_jeonse_notice.pdf,2,2,미검수,True
+NOTICE_JEONSE_001_G2,NOTICE_JEONSE_001,submission_method,서류 제출,온라인 또는 별도 안내 방식의 개발용 샘플입니다.,sample_jeonse_notice.pdf,3,3,미검수,True
+NOTICE_JEONSE_001_G3,NOTICE_JEONSE_001,documents_common,공통 서류,주민등록표 등본과 가족관계증명서를 공통 준비 후보로 표시합니다.,sample_jeonse_notice.pdf,3,3,미검수,True
+NOTICE_JEONSE_001_G4,NOTICE_JEONSE_001,documents_conditional,조건부 서류,대학생·취업준비생·대리신청 여부에 따라 서류가 달라질 수 있습니다.,sample_jeonse_notice.pdf,4,4,미검수,True
+NOTICE_JEONSE_001_G5,NOTICE_JEONSE_001,caution,주의사항,이 데이터는 기능 검증용 샘플이며 실제 신청 자격이나 서류를 확정하지 않습니다.,sample_jeonse_notice.pdf,5,5,미검수,True
+NOTICE_JEONSE_001_G6,NOTICE_JEONSE_001,schedule,일정,접수 기간과 서류제출 기간은 실제 공식 공고에서 확인해야 합니다.,sample_jeonse_notice.pdf,2,2,미검수,True
+NOTICE_VUL_001_G1,NOTICE_VUL_001,application_method,신청 방법,주민센터 또는 LH 상담으로 진행하는 개발용 샘플입니다. 실제 공고를 확인하세요.,sample_vulnerable_notice.pdf,2,2,미검수,True
+NOTICE_VUL_001_G2,NOTICE_VUL_001,submission_method,서류 제출,방문 또는 별도 안내 방식의 개발용 샘플입니다.,sample_vulnerable_notice.pdf,3,3,미검수,True
+NOTICE_VUL_001_G3,NOTICE_VUL_001,documents_common,공통 서류,주민등록표 등본과 가족관계증명서를 공통 준비 후보로 표시합니다.,sample_vulnerable_notice.pdf,3,3,미검수,True
+NOTICE_VUL_001_G4,NOTICE_VUL_001,documents_conditional,조건부 서류,대학생·취업준비생·대리신청 여부에 따라 서류가 달라질 수 있습니다.,sample_vulnerable_notice.pdf,4,4,미검수,True
+NOTICE_VUL_001_G5,NOTICE_VUL_001,caution,주의사항,이 데이터는 기능 검증용 샘플이며 실제 신청 자격이나 서류를 확정하지 않습니다.,sample_vulnerable_notice.pdf,5,5,미검수,True
+NOTICE_VUL_001_G6,NOTICE_VUL_001,schedule,일정,접수 기간과 서류제출 기간은 실제 공식 공고에서 확인해야 합니다.,sample_vulnerable_notice.pdf,2,2,미검수,True

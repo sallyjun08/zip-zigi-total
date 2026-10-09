@@ -1,0 +1,6 @@
+{
+  "fingerprint": "08ec1614585dbf41919be4c3b36216d158d35074d942a9b114286472b0d28c3b",
+  "model_name": "BAAI/bge-m3",
+  "data_mode": "real_csv",
+  "chunk_count": 2632
+}

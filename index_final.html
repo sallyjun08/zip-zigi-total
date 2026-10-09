@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip.지기 - 청년 주거 독립 연구소</title>
+    
+    <!-- 모던 폰트: Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-workspace: #F7F8FA; 
+            --bg-left: #FFFFFF;      
+            --main-olive: #6B705C;   
+            --dark-olive: #4A503D;
+            --light-olive: #A4A999;
+            --pastel-olive: #F4F5EF; 
+            --point-yellow: #F0CA5E; 
+            --point-blue: #4A90E2; 
+            --error-red: #E05252;
+            
+            --text-main: #191F28;    
+            --text-desc: #6B7684;    
+            --text-sub: #8B95A1;
+            --white: #FFFFFF;
+            
+            /* 스무스 애니메이션 타이밍 */
+            --bezier-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* 섀도우 규격 */
+            --shadow-base: 0 12px 30px rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 4px 16px rgba(0,0,0,0.04);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.08);
+            --shadow-tooltip: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+
+        body { background-color: var(--bg-workspace); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; }
+        ::-webkit-scrollbar { display: none; }
+        
+        /* -------------------------------------
+           Layout (40:60 고정 분할)
+        -------------------------------------- */
+        .dashboard { display: flex; width: 100%; height: 100%; }
+
+        /* Left Panel - Input Form */
+        .left-panel {
+            width: 40%; min-width: 440px; max-width: 500px; height: 100%;
+            background-color: var(--bg-left); padding: 48px 40px;
+            overflow-y: auto; box-shadow: 8px 0 30px rgba(0,0,0,0.03); z-index: 10;
+        }
+
+        .right-panel {
+            flex: 1; height: 100%; position: relative; 
+            background-color: var(--bg-workspace); 
+            /* 세련된 파스텔 그라데이션 배경 (답답한 박스 대체) */
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(240, 202, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(107, 112, 92, 0.08) 0%, transparent 60%);
+            overflow-y: auto; display: flex; flex-direction: column; padding: 60px; align-items: center; 
+        }
+
+        /* -------------------------------------
+           Left Panel - Form & Brand
+        -------------------------------------- */
+        .brand-header { margin-bottom: 40px; }
+        .brand-header .subtitle {
+            display: inline-block; font-size: 13px; font-weight: 800; color: var(--main-olive);
+            margin-bottom: 8px; letter-spacing: 0.3px;
+        }
+        .brand-header h1 { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; }
+        .brand-header p { font-size: 15px; font-weight: 500; color: var(--text-desc); line-height: 1.6; }
+
+        .form-group { margin-bottom: 28px; }
+        .form-group label { display: block; font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .form-row { display: flex; gap: 10px; }
+
+        .input-base {
+            width: 100%; height: 52px; padding: 0 16px; border: 1.5px solid transparent;
+            border-radius: 14px; font-size: 15px; font-weight: 600; color: var(--text-main);
+            background-color: #F4F5F6; transition: all 0.3s var(--bezier-smooth); outline: none;
+        }
+        .input-base:focus:not(:disabled) {
+            background-color: var(--white); border-color: var(--main-olive);
+            box-shadow: 0 0 0 4px rgba(107, 112, 92, 0.1);
+        }
+
+        /* 모든 시/군/구 셀렉트 박스 화살표 비주얼 완벽 통일 */
+        select.input-base {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238B95A1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 16px center; cursor: pointer;
+        }
+        select.input-base:disabled { 
+            background-color: #E9ECEF; color: #ADB5BD; cursor: not-allowed;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ADB5BD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+        input.input-base:disabled { background-color: #E9ECEF; color: #ADB5BD; cursor: not-allowed; }
+        .input-base::placeholder { color: #ADB5BD; font-weight: 500; }
+
+        /* 라디오 버튼 */
+        .radio-group { display: flex; background-color: #F4F5F6; border-radius: 14px; padding: 4px; }
+        .radio-group label { flex: 1; margin: 0; position: relative; }
+        .radio-group input[type="radio"] { display: none; }
+        .radio-btn {
+            display: flex; align-items: center; justify-content: center; height: 44px;
+            border-radius: 10px; font-size: 14.5px; font-weight: 600; color: var(--text-desc);
+            cursor: pointer; transition: all 0.3s var(--bezier-smooth);
+        }
+        .radio-group input[type="radio"]:checked + .radio-btn {
+            background-color: var(--white); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* 소득 예외 버튼 */
+        .btn-unknown {
+            flex-shrink: 0; height: 52px; padding: 0 16px; background-color: rgba(240, 202, 94, 0.2);
+            color: #8A6715; border: none; border-radius: 14px; font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-unknown:hover { background-color: var(--point-yellow); color: #4A3E00; }
+
+        /* ★ 추가된 AI 소득 추정기 CSS ★ */
+        .ai-income-estimator {
+            display: none;
+            margin-top: 14px;
+            padding: 20px;
+            background-color: var(--pastel-olive);
+            border-radius: 14px;
+            animation: fadeInDownAnim 0.3s var(--bezier-smooth) forwards;
+        }
+        .ai-income-estimator.show {
+            display: block;
+        }
+        .ai-income-desc {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--dark-olive);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        textarea.input-base {
+            height: 90px;
+            padding: 16px;
+            resize: none;
+            line-height: 1.5;
+        }
+        textarea.input-base:disabled {
+            background-color: #E9ECEF; color: #ADB5BD; cursor: not-allowed;
+        }
+        @keyframes fadeInDownAnim { 
+            0% { opacity: 0; transform: translateY(-10px); } 
+            100% { opacity: 1; transform: translateY(0); } 
+        }
+
+        .submit-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; height: 56px; background-color: var(--main-olive); color: var(--white);
+            border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s var(--bezier-smooth); margin-top: 40px;
+        }
+        .submit-btn:hover:not(:disabled) { background-color: var(--dark-olive); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(107, 112, 92, 0.2); }
+        .submit-btn:active:not(:disabled) { transform: scale(0.98); }
+        .submit-btn:disabled { background-color: var(--light-olive); cursor: not-allowed; opacity: 0.8; }
+
+        .btn-spinner {
+            display: none; width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid var(--white);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* -------------------------------------
+           Right Panel - Components & Animations
+        -------------------------------------- */
+        .fade-in-up { animation: fadeInUpAnim 0.5s var(--bezier-smooth) forwards; }
+        .fade-out { animation: fadeOutAnim 0.3s var(--bezier-smooth) forwards; }
+        @keyframes fadeInUpAnim { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOutAnim { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-15px); } }
+
+        /* -------------------------------------
+           ★ 글로벌 툴팁 (크기 조화 및 초미세 조정 완벽 반영) ★
+        -------------------------------------- */
+        .tooltip-trigger {
+            font-size: inherit !important;         /* 주변 글자 크기와 100% 동일 */
+            font-weight: 700 !important;           /* 진하게 강조 */
+            color: inherit;                        /* 주변 글자색 상속 */
+            border-bottom: 2px dotted var(--point-blue) !important; /* 부드러운 파란 점선 */
+            cursor: help !important;               /* 도움말 커서 */
+            position: relative; display: inline-block; transition: color 0.3s ease;
+        }
+        .tooltip-trigger:hover { color: var(--point-blue); }
+        
+        .tooltip-content {
+            visibility: hidden; opacity: 0; position: absolute; bottom: 125%; left: 50%;
+            transform: translateX(-50%) translateY(10px); background-color: var(--text-main); color: var(--white);
+            /* 텍스트 크기 12px 축소 및 패딩 타이트하게 조정 */
+            padding: 8px 12px !important; border-radius: 8px; font-size: 12px !important; font-weight: 500; line-height: 1.4 !important;
+            width: max-content; max-width: 240px; z-index: 9999; transition: all 0.3s var(--bezier-smooth);
+            box-shadow: var(--shadow-tooltip); pointer-events: none; text-align: left; word-break: keep-all;
+        }
+        .tooltip-content::after {
+            content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 6px; border-style: solid; border-color: var(--text-main) transparent transparent transparent;
+        }
+        .tooltip-trigger:hover .tooltip-content { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* -------------------------------------
+           상태 1: 온보딩 개편 (미니멀리즘 + 수직 중앙 정렬)
+        -------------------------------------- */
+        .waiting-state { 
+            width: 100%; max-width: 640px; display: flex; flex-direction: column; 
+            padding-bottom: 40px; margin: auto 0; background: transparent; 
+            align-items: center; justify-content: center; /* 전체 콘텐츠 수직 중앙 정렬 */
+        }
+
+        .welcome-container { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;}
+
+        /* 부엉이 스케일업 및 디테일 그림자 */
+        .mascot-area-new { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 24px; }
+        .mascot-img-large {
+            width: 180px; height: 180px; object-fit: contain; 
+            filter: drop-shadow(0 12px 24px rgba(107, 112, 92, 0.15));
+            animation: floating 3s ease-in-out infinite; cursor: pointer;
+        }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .mascot-label {
+            background-color: var(--white); color: var(--dark-olive); padding: 6px 16px;
+            border-radius: 20px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        /* 슬로건 폰트 크기 슬림화 (18~20px) 및 하단 여백(40px) 확보 */
+        .slogan { 
+            font-size: 20px; font-weight: 800; color: var(--text-main); 
+            margin-bottom: 40px !important; word-break: keep-all; line-height: 1.5; text-align: center;
+        }
+        
+        /* 말풍선 안내 박스 (투명하고 부드러운 느낌) */
+        .speech-bubble {
+            background: var(--white); padding: 18px 24px; border-radius: 20px; 
+            font-size: 14.5px; line-height: 1.6; color: var(--text-desc); 
+            word-break: keep-all; text-align: center; box-shadow: var(--shadow-card);
+            width: 100%; margin-bottom: 24px;
+        }
+        .speech-bubble-content { transition: opacity 0.3s ease, transform 0.3s ease; opacity: 1; transform: translateY(0); }
+        .speech-bubble-content.hide { opacity: 0; transform: translateY(6px); }
+        .speech-bubble-content .bold-point { font-size: 15px; font-weight: 800; color: var(--text-main); display: inline-block; margin: 4px 0;}
+
+        /* 3대 핵심 기술 정보 카드 복원 */
+        .strength-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .strength-card { 
+            display: flex; align-items: center; gap: 16px; padding: 18px 24px; 
+            border-radius: 16px; background-color: var(--white); box-shadow: var(--shadow-card);
+        }
+        .strength-icon {
+            width: 44px; height: 44px; background-color: var(--pastel-olive); color: var(--main-olive);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+        }
+        .strength-info { text-align: left; }
+        .strength-info h3 { font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; }
+        .strength-info p { font-size: 13.5px; color: var(--text-desc); line-height: 1.4; margin: 0;}
+
+        .trust-badge { font-size: 13px; color: var(--text-sub); text-align: center; margin-top: 24px; line-height: 1.5; font-weight: 500; }
+
+        /* -------------------------------------
+           상태 2: 로딩 화면 (텍스트 다이어트 & 주거 TIP)
+        -------------------------------------- */
+        .loading-state {
+            display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        .loading-mascot {
+            width: 170px; height: 170px; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(107, 112, 92, 0.15));
+            animation: floating 2.5s ease-in-out infinite; margin-bottom: 24px;
+        }
+
+        .loading-title { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+        .loading-dots::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
+        @keyframes dots { 
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 
+            40% { color: inherit; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 
+            60% { text-shadow: .25em 0 0 inherit, .5em 0 0 rgba(0,0,0,0);} 
+            80%, 100% { text-shadow: .25em 0 0 inherit, .5em 0 0 inherit;} 
+        }
+
+        .loading-desc { font-size: 15px; font-weight: 600; color: var(--main-olive); margin-bottom: 32px; }
+
+        .housing-tip-box {
+            background-color: var(--white); padding: 20px 28px; border-radius: 18px; box-shadow: var(--shadow-base);
+            color: var(--dark-olive); font-weight: 500; font-size: 14.5px; line-height: 1.5; max-width: 440px;
+            text-align: left; border-left: 4px solid var(--point-yellow);
+        }
+        .housing-tip-box strong { color: var(--main-olive); font-size: 15px; display: block; margin-bottom: 6px; }
+
+        /* -------------------------------------
+           상태 3: 분석 결과 (지피지기 x 내집연구소 융합)
+        -------------------------------------- */
+        .result-state { display: none; max-width: 860px; width: 100%; padding-bottom: 60px; }
+
+        .result-header { margin-bottom: 32px; text-align: center; }
+        .result-header h2 { font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
+        .result-header p { font-size: 15px; color: var(--text-desc); line-height: 1.5; }
+
+        .error-card {
+            background-color: #FFF5F5; border: 1px solid #FFE3E3; border-radius: 24px;
+            padding: 40px; text-align: center; margin-bottom: 40px; box-shadow: var(--shadow-card);
+        }
+        .error-card h3 { color: var(--error-red); font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+        .error-card p { color: #6B7684; font-size: 15px; line-height: 1.6; }
+
+        .top3-list { display: flex; flex-direction: column; gap: 40px; }
+
+        /* ★ 리뉴얼된 정책 카드 스타일 ★ */
+        .policy-card {
+            background-color: var(--white); border-radius: 28px; padding: 36px;
+            box-shadow: var(--shadow-base); border: 2px solid transparent;
+            transition: all 0.3s var(--bezier-smooth); position: relative; margin-top: 14px; 
+        }
+        .policy-card:hover { border-color: rgba(107, 112, 92, 0.2); transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+        /* 매칭 점수 배지 */
+        .rank-badge {
+            position: absolute; top: -16px; left: 36px; background-color: var(--text-main); color: var(--white);
+            padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .rank-badge.top1 { background-color: var(--point-yellow); color: #4A3E00; font-size: 15px;}
+
+        /* 헤더: 타이틀 & 원형 차트 */
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; margin-top: 8px; gap: 20px;}
+        .card-header-left { flex: 1; }
+        
+        /* 타이틀 링크 색상 통일 및 상태별 변경 차단 */
+        .match-title { font-size: 24px; font-weight: 800; line-height: 1.4; margin-bottom: 12px; word-break: keep-all; }
+        .match-title a, .match-title a:link, .match-title a:visited, .match-title a:active { 
+            color: #2C3E50 !important; /* 차콜 그레이 고정 */
+            text-decoration: none; position: relative; transition: color 0.3s ease; display: inline-block;
+        }
+        .match-title a::after {
+            content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 2px; bottom: -2px; left: 0;
+            background-color: #2C3E50; transform-origin: bottom right; transition: transform 0.3s var(--bezier-smooth);
+        }
+        .match-title a:hover { color: #1a252f !important; }
+        .match-title a:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+
+        .match-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+        .meta-tag { background-color: #F8F9FA; border: 1px solid #E9ECEF; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-desc); }
+        .meta-tag.highlight { color: #3182F6; border-color: #3182F6; background: #fff; }
+
+        /* 원형 차트 (내집연구소 융합) */
+        .score-chart {
+            width: 76px; height: 76px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: conic-gradient(var(--main-olive) var(--score-deg), #E9ECEF 0); 
+            position: relative; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .score-inner {
+            width: 62px; height: 62px; background-color: var(--white); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 800; color: #2C3E50;
+        }
+        .score-inner span { font-size: 12px; margin-left: 2px; margin-top: 4px;}
+
+        /* 바디: 분할된 섹션 */
+        .card-body { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+        
+        .info-section { background-color: rgba(107, 112, 92, 0.04); border-radius: 16px; padding: 20px 24px; }
+        .info-title { font-size: 15px; font-weight: 800; color: var(--dark-olive); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;}
+        .info-desc { font-size: 14.5px; color: var(--text-main); line-height: 1.6; font-weight: 500; word-break: keep-all; }
+        
+        .check-points { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .check-point-item { display: flex; gap: 8px; font-size: 14.5px; font-weight: 500; color: var(--text-main); line-height: 1.5; align-items: flex-start;}
+        .check-point-item::before { content: '✔️'; color: var(--main-olive); font-size: 12px; margin-top: 2px;}
+
+        /* 서류 그리드 */
+        .doc-section-title { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; margin-top: 8px;}
+        .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;}
+        .doc-card { background: #F8F9FA; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #E9ECEF; }
+        .doc-header { margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .doc-name { font-size: 16px; font-weight: 800; color: var(--text-main); }
+        .doc-agency { font-size: 11px; font-weight: 700; background-color: var(--white); color: var(--text-sub); padding: 4px 8px; border-radius: 6px; border: 1px solid #E9ECEF; }
+        .doc-guide { font-size: 13px; color: var(--text-desc); line-height: 1.5; margin-bottom: 16px; flex-grow: 1; word-break: keep-all; }
+        
+        .doc-link-btn {
+            width: 100%; height: 44px; background-color: var(--white); color: var(--text-main);
+            border: 1px solid #D1D6DB; font-size: 14px; font-weight: 700; border-radius: 12px;
+            cursor: pointer; transition: all 0.2s var(--bezier-smooth);
+        }
+        .doc-link-btn:hover { background-color: var(--main-olive); color: var(--white); border-color: var(--main-olive); }
+        .doc-link-btn.completed { background-color: #E9ECEF; color: var(--text-sub); border-color: transparent; pointer-events: none; box-shadow: none; }
+
+        /* 하단 공식 신청 버튼 */
+        .official-link-btn {
+            display: flex; align-items: center; justify-content: center; width: 100%; height: 56px;
+            background-color: var(--white); color: #2C3E50 !important; font-size: 16px; font-weight: 800;
+            border-radius: 16px; border: 1.5px solid #D1D6DB; text-decoration: none; transition: all 0.2s;
+            margin-top: 16px;
+        }
+        .official-link-btn:hover { border-color: var(--text-main); background-color: #FAFAFB; color: var(--text-main) !important;}
+
+        /* ★ 최종 성공 액션 CTA ★ */
+        .success-cta {
+            width: 100%; height: 64px; margin-top: 16px; margin-bottom: -8px;
+            background: linear-gradient(135deg, var(--point-yellow), #FFD700);
+            color: #4A3E00; font-size: 17px; font-weight: 800;
+            border: none; border-radius: 16px; cursor: pointer;
+            box-shadow: 0 8px 24px rgba(240, 202, 94, 0.4);
+            transition: all 0.3s var(--bezier-smooth);
+            display: none; /* JS를 통해 block 전환 */
+        }
+        .success-cta:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(240, 202, 94, 0.6); }
+
+        /* -------------------------------------
+           ★ Slide-out Drawer (좌측 배치 듀얼 뷰) ★
+        -------------------------------------- */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.3); z-index: 9000; opacity: 0; visibility: hidden;
+            transition: all 0.3s var(--bezier-smooth); backdrop-filter: blur(2px);
+        }
+        .drawer-overlay.show { opacity: 1; visibility: visible; }
+
+        .guide-drawer {
+            position: fixed; top: 0; left: -420px; width: 400px; height: 100vh; /* 좌측 안착 */
+            background-color: var(--white); box-shadow: 8px 0 40px rgba(0,0,0,0.1);
+            z-index: 9999; transition: left 0.4s var(--bezier-smooth);
+            display: flex; flex-direction: column;
+        }
+        .guide-drawer.open { left: 0; right: auto; }
+
+        .drawer-header {
+            padding: 24px 32px; border-bottom: 1px solid #F4F5F6; background-color: var(--white);
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .drawer-back {
+            background: none; border: none; font-size: 14px; font-weight: 700; color: var(--text-desc); cursor: pointer; text-align: left; padding: 0; display: inline-flex; align-items: center; transition: color 0.2s;
+        }
+        .drawer-back:hover { color: var(--text-main); }
+        .drawer-title-area h3 { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
+        .drawer-title-area p { font-size: 14px; color: var(--text-sub); font-weight: 500; }
+        
+        .drawer-body { padding: 32px; overflow-y: auto; flex: 1; background-color: #FAFAFB; display: flex; flex-direction: column; justify-content: space-between;}
+        
+        .check-list { display: flex; flex-direction: column; gap: 16px; }
+        
+        /* 체크리스트 동작 UI 활성화 */
+        .check-item {
+            display: flex; gap: 14px; align-items: flex-start;
+            background: var(--white); padding: 20px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            cursor: pointer; transition: background 0.2s, border 0.2s; border: 1px solid transparent;
+        }
+        .check-item:hover { border-color: var(--main-olive); }
+        .check-item input[type="checkbox"] { display: none; }
+        
+        .check-box {
+            width: 22px; height: 22px; border: 2px solid #D1D6DB; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px; flex-shrink: 0;
+            transition: all 0.2s; background: var(--white);
+        }
+        .check-item input[type="checkbox"]:checked + .check-box { background-color: var(--main-olive); border-color: var(--main-olive); }
+        .check-item input[type="checkbox"]:checked + .check-box::after { content: '✔'; color: white; font-size: 14px; }
+        
+        .check-text { font-size: 14.5px; color: var(--text-main); line-height: 1.5; font-weight: 600; margin: 0; word-break: keep-all; transition: all 0.2s;}
+        .check-text span { color: var(--dark-olive); font-weight: 800; }
+        /* 체크 시 취소선 피드백 */
+        .check-item input[type="checkbox"]:checked ~ .check-text { text-decoration: line-through; color: var(--text-sub); }
+
+        .btn-complete {
+            margin-top: 32px; width: 100%; height: 56px; background-color: var(--point-yellow);
+            color: #4A3E00; border: none; border-radius: 14px; font-size: 16px; font-weight: 800;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(240, 202, 94, 0.3);
+        }
+        .btn-complete:hover { transform: translateY(-2px); filter: brightness(0.95); }
+
+        /* -------------------------------------
+           ★ 성공 모달 & Confetti 효과 ★
+        -------------------------------------- */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background: rgba(0,0,0,0.5); z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        
+        .modal-content {
+            background: #fff; padding: 48px; border-radius: 24px; text-align: center;
+            max-width: 480px; position: relative; overflow: hidden;
+            transform: scale(0.9); transition: all 0.3s var(--bezier-smooth);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-content h2 { font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 16px; }
+        .modal-content p { font-size: 15px; color: var(--text-desc); line-height: 1.6; margin-bottom: 32px; word-break:keep-all; }
+        .modal-content button {
+            width: 100%; height: 56px; background-color: var(--main-olive);
+            color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .modal-content button:hover { background-color: var(--dark-olive); }
+
+        #confetti-container { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow: hidden; z-index: -1; }
+        .confetti { position: absolute; width: 10px; height: 10px; opacity: 0; }
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
+        }
+        
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- [왼쪽 40% 영역]: 브랜딩 & 입력 폼 -->
+        <div class="left-panel">
+            <div class="brand-header">
+                <span class="subtitle">청년 주거 독립 연구소</span>
+                <h1>Zip.지기 🦉</h1>
+                <p>몇 가지 질문만으로<br>나에게 딱 맞는 주거 정책과 서류를 찾아드려요.</p>
+            </div>
+
+            <!-- ★ 백엔드 6대 필수 연동 폼 ★ -->
+            <form id="matchingForm">
+                
+                <!-- 1. 희망 지역 (전국 17개 시도 병합) -->
+                <div class="form-group">
+                    <label>1. 희망 거주 지역</label>
+                    <div class="form-row">
+                        <select class="input-base" id="region_sido" name="region" required>
+                            <option value="">시/도 선택</option>
+                            <option value="서울">서울특별시</option>
+                            <option value="경기">경기도</option>
+                            <option value="인천">인천광역시</option>
+                            <option value="강원">강원특별자치도</option>
+                            <option value="충북">충청북도</option>
+                            <option value="충남">충청남도</option>
+                            <option value="대전">대전광역시</option>
+                            <option value="세종">세종특별자치시</option>
+                            <option value="전북">전북특별자치도</option>
+                            <option value="전남">전라남도</option>
+                            <option value="광주">광주광역시</option>
+                            <option value="경북">경상북도</option>
+                            <option value="경남">경상남도</option>
+                            <option value="대구">대구광역시</option>
+                            <option value="울산">울산광역시</option>
+                            <option value="부산">부산광역시</option>
+                            <option value="제주">제주특별자치도</option>
+                            <option value="전국">전국 전체</option>
+                        </select>
+                        <select class="input-base" id="region_sigungu" name="region_sub" required disabled>
+                            <option value="">시/군/구 선택</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2. 주민등록상 주소지 -->
+                <div class="form-group">
+                    <label>2. 주민등록상 주소지</label>
+                    <div class="form-row">
+                        <select class="input-base" id="reg_region_sido" name="reg_region" required>
+                            <option value="">시/도 선택</option>
+                            <option value="서울">서울특별시</option>
+                            <option value="경기">경기도</option>
+                            <option value="인천">인천광역시</option>
+                            <option value="강원">강원특별자치도</option>
+                            <option value="충북">충청북도</option>
+                            <option value="충남">충청남도</option>
+                            <option value="대전">대전광역시</option>
+                            <option value="세종">세종특별자치시</option>
+                            <option value="전북">전북특별자치도</option>
+                            <option value="전남">전라남도</option>
+                            <option value="광주">광주광역시</option>
+                            <option value="경북">경상북도</option>
+                            <option value="경남">경상남도</option>
+                            <option value="대구">대구광역시</option>
+                            <option value="울산">울산광역시</option>
+                            <option value="부산">부산광역시</option>
+                            <option value="제주">제주특별자치도</option>
+                        </select>
+                        <select class="input-base" id="reg_region_sigungu" name="reg_region_sub" required disabled>
+                            <option value="">시/군/구 선택</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. 나이 -->
+                <div class="form-group">
+                    <label>3. 만 나이</label>
+                    <input type="number" class="input-base" id="age" name="age" placeholder="예: 25" min="19" max="39" required>
+                </div>
+
+                <!-- 4. 주택 소유 여부 (토글) -->
+                <div class="form-group">
+                    <label>4. 주택 소유 여부</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" id="housing_own_no" name="housing_own" value="무주택" checked>
+                            <div class="radio-btn">무주택자</div>
+                        </label>
+                        <label>
+                            <input type="radio" id="housing_own_yes" name="housing_own" value="유주택">
+                            <div class="radio-btn">유주택자</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 5. 월 소득 및 AI 주관식 추정기 연동 -->
+                <div class="form-group">
+                    <label>5. 가구 월 평균 소득 (세전)</label>
+                    <div class="form-row">
+                        <input type="number" class="input-base" id="income" name="income" placeholder="예: 300 (단위: 만원)" required>
+                        <button type="button" class="btn-unknown" id="btnUnknownIncome" title="AI가 소득을 대략적으로 추정해 줍니다.">잘 모르겠어요❓</button>
+                    </div>
+                    
+                    <!-- ★ AI 소득 추정 래퍼 (기본 숨김) ★ -->
+                    <div class="ai-income-estimator" id="aiIncomeWrapper">
+                        <p class="ai-income-desc">💡 부모님이 하시는 일을 설명해주면 AI가 소득을 대략적으로 추정해줘요.</p>
+                        <textarea class="input-base" id="parent-job-desc" name="parent_job_desc" placeholder="(예시: 아버지는 개인택시 운전을 하시고, 어머니는 전업주부이십니다.)"></textarea>
+                    </div>
+                </div>
+
+                <!-- ★ 6. 가구원 수 (신규 알고리즘 연동 필수항목) ★ -->
+                <div class="form-group">
+                    <label>6. 현재 세대 구성 인원 수</label>
+                    <input type="number" class="input-base" id="householdSize" name="householdSize" min="1" max="8" placeholder="본인 포함 인원 수 (예: 1)" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-spinner" id="btnSpinner"></span>
+                    <span id="btnText">나만의 주거 리포트 분석하기</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- [오른쪽 60% 영역]: 대시보드 뷰 -->
+        <div class="right-panel" id="rightPanel">
+            
+            <!-- [상태 1] 온보딩 화면 (다정한 톤 & 와이드한 투명 레이아웃) -->
+            <div class="waiting-state fade-in-up" id="waitingState">
+                <div class="welcome-container">
+                    <div class="mascot-area-new">
+                        <img src="https://i.ibb.co/ksxnBZm8/owl-doctor.png" alt="올빼미 박사" class="mascot-img-large" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3e%3ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23F0CA5E\'/%3e%3ctext x=\'50\' y=\'50\' font-size=\'40\' text-anchor=\'middle\' dy=\'.3em\'%3e🦉%3c/text%3e%3c/svg%3e';">
+                        <div class="mascot-label">수석 연구원 <strong>부엉이 박사</strong> 🦉</div>
+                    </div>
+                    
+                    <h2 class="slogan">지피지기 백전백승!<br>주거 정책을 알고 나를 알면,<br>청년 주거 독립도 백전백승입니다! 🏡✨</h2>
+                    
+                    <!-- 실시간 가이드 전환 컨테이너 -->
+                    <div class="speech-bubble">
+                        <div id="speechBubbleContent" class="speech-bubble-content">
+                            <span class="bold-point">왼쪽에서 나만의 조건들을 톡톡 클릭해 볼까요? ✨</span><br>
+                            작성하다가 헷갈리는 질문이 나오면, 제가 바로 이 자리에서 <span class="tooltip-trigger">친절하게 설명<span class="tooltip-content">행정 용어나 복잡한 정책 조건 위에 마우스를 올려보세요! 제가 알기 쉽게 쏙쏙 풀어서 설명해 드릴게요.</span></span>해 드릴게요.<br>나만의 맞춤형 정책과 서류 발급 가이드까지 한 번에 정리해 드릴 테니, 지금 가볍게 시작해 봐요!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3대 핵심 기술 정보 카드 복원 -->
+                <div class="strength-list">
+                    <div class="strength-card">
+                        <div class="strength-icon">🏢</div>
+                        <div class="strength-info">
+                            <h3>공고 마스터 정밀 매칭</h3>
+                            <p>수많은 최신 공고 중 내 조건에 꼭 맞는 트랙만 찾아냅니다.</p>
+                        </div>
+                    </div>
+                    <div class="strength-card">
+                        <div class="strength-icon">📑</div>
+                        <div class="strength-info">
+                            <h3>필수 서류 듀얼 뷰 가이드</h3>
+                            <p>발급처 사이트와 필수 체크리스트를 양옆에 띄워 편안하게 도와드려요.</p>
+                        </div>
+                    </div>
+                    <div class="strength-card">
+                        <div class="strength-icon">💡</div>
+                        <div class="strength-info">
+                            <h3>숨은 자격 완화 탐색</h3>
+                            <p>RAG AI가 복잡한 판정 로직을 뒤져 가장 유리한 조건을 발굴합니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="trust-badge">※ 지피지기는 국토교통부 마스터 데이터와 행정 서류 규칙을 기반으로 정밀하게 분석합니다.</p>
+            </div>
+
+            <!-- [상태 2] 로딩 화면 -->
+            <div class="loading-state" id="loadingState">
+                <img src="https://i.ibb.co/ksxnBZm8/owl-doctor.png" alt="분석중" class="loading-mascot" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3e%3ccircle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23F0CA5E\'/%3e%3ctext x=\'50\' y=\'50\' font-size=\'40\' text-anchor=\'middle\' dy=\'.3em\'%3e🦉%3c/text%3e%3c/svg%3e';">
+                <div class="loading-title">맞춤 주거 리포트를 작성하고 있어요<span class="loading-dots"></span></div>
+                <div class="loading-desc" id="loadingDynamicText">마스터 데이터와 행정 서류를 매칭하는 중입니다.</div>
+                
+                <div class="housing-tip-box">
+                    <strong>💡 부엉이 박사의 청년 주거 상식 TIP!</strong>
+                    전세 계약하기 전, 등기부등본의 <span class="tooltip-trigger">갑구와 을구 확인<span class="tooltip-content">갑구는 소유권(진짜 주인), 을구는 소유권 이외의 권리(근저당 등 빚)를 의미해요.</span></span>은 필수랍니다! 진짜 주인이 맞는지, 빚은 없는지 꼭 체크해요. Owls up! 🦉
+                </div>
+            </div>
+
+            <!-- [상태 3] 분석 결과 화면 -->
+            <div class="result-state" id="resultState">
+                <div class="result-header">
+                    <h2>당신만을 위한 맞춤 주거 리포트 🎉</h2>
+                    <p>입력하신 조건과 매칭 점수가 가장 높은 <strong>Top 3 추천 정책</strong>과 서류 가이드입니다.</p>
+                </div>
+                
+                <!-- JS 렌더링 (Top 3 구조) -->
+                <div class="top3-list" id="top3ListContainer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ★ Slide-out Drawer (좌측 배치 듀얼 뷰) ★ -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="guide-drawer" id="guideDrawer">
+        <div class="drawer-header">
+            <button class="drawer-back" id="drawerBack">⬅️ 다른 서류 선택으로 돌아가기</button>
+            <div class="drawer-title-area" style="margin-top: 16px;">
+                <h3 id="drawerTitle">주민등록표등본</h3>
+                <p>온라인 발급 시 필수 체크리스트</p>
+            </div>
+        </div>
+        <div class="drawer-body">
+            <div class="check-list" id="drawerChecklist">
+                <!-- JS 동적 렌더링 -->
+            </div>
+            <button type="button" class="btn-complete" id="btnCompleteDoc">서류 발급 완료하기 🌟</button>
+        </div>
+    </div>
+
+    <!-- ★ 최종 성공 모달 창 ★ -->
+    <div id="successModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div id="confetti-container"></div>
+            <h2>축하합니다! 🎉</h2>
+            <p>부엉이 지기와 함께 모든 서류를 완벽히 준비했어요.<br>이제 주거 독립을 향해 당당하게 신청 버튼을 눌러보세요! 🦉</p>
+            <button id="modalGoBtn">실제 공고 신청하러 가기</button>
+        </div>
+    </div>
+
+    <!-- UI Interaction Script & Logic Simulation -->
+    <script>
+        // ----------------------------------------------------
+        // 1. 전국 17개 시/도 연동 로직
+        // ----------------------------------------------------
+        const regionData = {
+            "서울": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
+            "경기": ["수원시", "고양시", "용인시", "성남시", "부천시", "화성시", "안산시", "남양주시", "안양시", "평택시", "시흥시", "파주시", "의정부시", "김포시", "광주시", "광명시", "군포시", "하남시", "오산시", "양주시", "이천시", "구리시", "안성시", "포천시", "의왕시", "양평군", "여주시", "동두천시", "가평군", "과천시", "연천군"],
+            "인천": ["계양구", "미추홀구", "남동구", "동구", "부평구", "서구", "연수구", "중구", "강화군", "옹진군"],
+            "강원": ["춘천시", "원주시", "강릉시", "동해시", "태백시", "속초시", "삼척시", "홍천군", "횡성군", "영월군", "평창군", "정선군"],
+            "충북": ["청주시", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군", "단양군"],
+            "충남": ["천안시", "공주시", "보령시", "아산시", "서산시", "논산시", "계룡시", "당진시", "금산군", "부여군", "서천군", "청양군", "홍성군", "예산군", "태안군"],
+            "대전": ["동구", "중구", "서구", "유성구", "대덕구"],
+            "세종": ["세종특별자치시"],
+            "전북": ["전주시", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군", "부안군"],
+            "전남": ["목포시", "여수시", "순천시", "나주시", "광양시", "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군", "장흥군", "강진군", "해남군", "영암군", "무안군", "함평군", "영광군", "장성군", "완도군", "진도군", "신안군"],
+            "광주": ["동구", "서구", "남구", "북구", "광산구"],
+            "경북": ["포항시", "경주시", "김천시", "안동시", "구미시", "영주시", "영천시", "상주시", "문경시", "경산시", "군위군", "의성군", "청송군", "영양군", "영덕군", "청도군", "고령군", "성주군", "칠곡군", "예천군", "봉화군", "울진군", "울릉군"],
+            "경남": ["창원시", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시", "양산시", "의령군", "함안군", "창녕군", "고성군", "남해군", "하동군", "산청군", "함양군", "거창군", "합천군"],
+            "대구": ["중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군"],
+            "울산": ["중구", "남구", "동구", "북구", "울주군"],
+            "부산": ["중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구", "기장군"],
+            "제주": ["제주시", "서귀포시"],
+            "전국": ["전국 전체"]
+        };
+
+        function bindRegionSelect(sidoId, sigunguId) {
+            const sidoEl = document.getElementById(sidoId);
+            const sigunguEl = document.getElementById(sigunguId);
+            sidoEl.addEventListener('change', function() {
+                const sido = this.value;
+                sigunguEl.innerHTML = '<option value="">시/군/구 선택</option>';
+                if (sido && regionData[sido]) {
+                    sigunguEl.disabled = false;
+                    regionData[sido].forEach(gungu => {
+                        const opt = document.createElement('option');
+                        opt.value = gungu; opt.innerText = gungu;
+                        sigunguEl.appendChild(opt);
+                    });
+                } else {
+                    sigunguEl.disabled = true;
+                }
+            });
+        }
+        bindRegionSelect('region_sido', 'region_sigungu');
+        bindRegionSelect('reg_region_sido', 'reg_region_sigungu');
+
+        // ----------------------------------------------------
+        // 2. 실시간 가이드 전환 (다정한 부엉이 톤) & AI 소득 폼 제어
+        // ----------------------------------------------------
+        const speeches = {
+            'region': '희망 <span class="highlight">거주 지역</span>에 따라 지자체 전용 지원금이나 정책 트랙이 달라지니 꼼꼼하게 선택해 주세요! 🏡',
+            'region_sub': '희망 <span class="highlight">거주 지역</span>에 따라 지자체 전용 지원금이나 정책 트랙이 달라지니 꼼꼼하게 선택해 주세요! 🏡',
+            'reg_region': '<span class="highlight">주민등록상 주소지</span>는 지역 우선 공급이나 당해 거주자 혜택을 판정할 때 아주 중요한 기준이 된답니다. 📍',
+            'reg_region_sub': '<span class="highlight">주민등록상 주소지</span>는 지역 우선 공급이나 당해 거주자 혜택을 판정할 때 아주 중요한 기준이 된답니다. 📍',
+            'age': '청년 주거 정책은 보통 <span class="highlight">만 19세부터 34세 혹은 39세</span>까지를 기준으로 삼는 경우가 많아요. 나이에 맞는 혜택을 찾아볼게요! ⏳',
+            'housing_own': '집이 없더라도 안심하세요! <span class="tooltip-trigger">무주택세대구성원<span class="tooltip-content">‘세대’에 해당하는 사람 전원이 주택을 소유하고 있지 아니한 세대입니다. 분양권도 포함되니 주의하세요!</span></span> 조건만 맞으면 충분히 신청할 수 있답니다. ✨',
+            'income': '소득 정보를 입력해주시면, <span class="tooltip-trigger">기준중위소득<span class="tooltip-content">보건복지부장관이 고시하는 국민 가구소득의 중위값으로, 임대주택 소득 심사의 핵심 기준입니다.</span></span> 대비 내 위치를 파악해서 가장 유리한 공고를 찾아드릴게요! 💵',
+            'householdSize': '가구원 수에 따라 <span class="highlight">기준중위소득 컷</span>이 달라지니, 본인을 포함한 정확한 세대 구성 인원 수를 입력해 주세요! 👨‍👩‍👧‍👦',
+            'parent_job_desc': '부모님의 직업이나 상황을 편하게 설명해 주시면, 제가 찰떡같이 이해하고 소득을 추정해 볼게요! 🦉✨'
+        };
+
+        const bubbleContent = document.getElementById('speechBubbleContent');
+        let currentSpeechKey = 'default';
+
+        function updateSpeech(key) {
+            if(!speeches[key] || currentSpeechKey === key) return;
+            currentSpeechKey = key;
+            bubbleContent.classList.add('hide');
+            setTimeout(() => {
+                bubbleContent.innerHTML = speeches[key];
+                bubbleContent.classList.remove('hide');
+            }, 300); 
+        }
+
+        // 텍스트에어리어 포함 모든 인풋 포커스 감지
+        document.querySelectorAll('.input-base, input[type="radio"], textarea').forEach(el => {
+            el.addEventListener('focus', function() { updateSpeech(this.name); });
+            if(el.type === 'radio') { el.addEventListener('change', function() { updateSpeech(this.name); }); }
+        });
+
+        // ★ AI 소득 주관식 추정기 토글 로직 ★
+        document.getElementById('btnUnknownIncome').addEventListener('click', function() {
+            const incomeInput = document.getElementById('income');
+            const aiWrapper = document.getElementById('aiIncomeWrapper');
+            const isHidden = !aiWrapper.classList.contains('show');
+
+            if (isHidden) {
+                // 열기: AI 소득 추정 주관식 폼 토글
+                aiWrapper.classList.add('show');
+                incomeInput.disabled = true; // 필수입력 우회
+                incomeInput.value = ''; // 기존 값 초기화
+                incomeInput.removeAttribute('required');
+                
+                bubbleContent.classList.add('hide');
+                setTimeout(() => {
+                    bubbleContent.innerHTML = '소득을 정확히 모르시는군요! 부모님이 하시는 일을 적어주시면 AI가 대략적으로 추정해서 맞춤 정책을 찾아드릴게요. 🦉';
+                    bubbleContent.classList.remove('hide');
+                }, 300);
+            } else {
+                // 닫기: 일반 소득 입력 모드 복원
+                aiWrapper.classList.remove('show');
+                incomeInput.disabled = false;
+                incomeInput.setAttribute('required', 'true');
+
+                bubbleContent.classList.add('hide');
+                setTimeout(() => {
+                    bubbleContent.innerHTML = '다시 소득을 직접 입력하실 수 있어요. <span class="tooltip-trigger">기준중위소득<span class="tooltip-content">보건복지부장관이 고시하는 국민 가구소득의 중위값으로, 임대주택 소득 심사의 핵심 기준입니다.</span></span> 대비 내 위치를 파악해서 가장 유리한 공고를 찾아드릴게요! 💵';
+                    bubbleContent.classList.remove('hide');
+                }, 300);
+            }
+        });
+
+        // ----------------------------------------------------
+        // 3. 서류 발급 현황 추적 & 모달 관리 로직
+        // ----------------------------------------------------
+        const docCompletedStatus = {}; 
+        let currentDocId = null;
+        let currentPolicyId = null;
+
+        const modalOverlay = document.getElementById('successModalOverlay');
+        let finalActionUrl = '';
+
+        document.getElementById('modalGoBtn').addEventListener('click', () => {
+            window.open(finalActionUrl, '_blank');
+            modalOverlay.classList.remove('show');
+        });
+
+        function showSuccessModal(policyId) {
+            const p = mockPolicies.find(x => x.id === policyId);
+            finalActionUrl = getPolicyLink(p.operator, p.title);
+            shootConfetti();
+            modalOverlay.classList.add('show');
+        }
+
+        function shootConfetti() {
+            const container = document.getElementById('confetti-container');
+            container.innerHTML = '';
+            const colors = ['#F0CA5E', '#6B705C', '#3182F6', '#E05252', '#4A503D'];
+            for(let i=0; i<60; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + '%';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animation = `fall ${Math.random() * 2 + 1.5}s ease-in forwards`;
+                container.appendChild(conf);
+            }
+        }
+
+        // ----------------------------------------------------
+        // 4. Drawer 듀얼 뷰 데이터 & 로직 (체크리스트 활성화)
+        // ----------------------------------------------------
+        const drawerData = {
+            "DOC_001": {
+                title: "주민등록표등본",
+                checklist: [
+                    "과거의 주소 변동 사항 (전체 포함)으로 발급받으셨나요? <span>(가산점 산정에 필수!)</span>",
+                    "세대 구성 사유 및 일자, <span class=\"tooltip-trigger\">세대주<span class=\"tooltip-content\">세대별 주민등록표상 대표자입니다.</span></span>와의 관계가 표시되도록 선택했는지 확인하세요.",
+                    "주민등록번호 뒷자리 13자리가 <span>모두 노출되도록</span> 전부 표시로 출력해야 합니다."
+                ]
+            },
+            "DOC_003": {
+                title: "가족관계증명서",
+                checklist: [
+                    "발급 대상자를 <span>'본인'</span> 기준으로 지정하여 신청하셨나요?",
+                    "일반증명서가 아닌 <span>'상세증명서'</span> 유형으로 선택하여 발급받으셔야 합니다.",
+                    "주민등록번호 뒷자리가 전부 공개되도록 설정했는지 확인해 주세요."
+                ]
+            },
+            "DOC_013": {
+                title: "건강보험 자격득실확인서",
+                checklist: [
+                    "발급 목적을 '관공서 제출용'으로 알맞게 선택하셨나요?",
+                    "조회 기간이 가입일부터 현재까지 <span>'전체 이력'</span>이 나오도록 설정했는지 확인해 주세요."
+                ]
+            },
+            "DOC_DEFAULT": {
+                title: "온라인 서류 발급 가이드",
+                checklist: ["공고문의 안내에 따라 필요한 세부 옵션을 꼼꼼히 확인하고 발급해주세요."]
+            }
+        };
+
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const guideDrawer = document.getElementById('guideDrawer');
+
+        // ★ 원본 데이터 기반 동적 아웃링크 분기 엔진 ★
+        function getPolicyLink(operator, title) {
+            if (!operator) return "https://www.google.com/search?q=" + encodeURIComponent(title);
+            if (operator.includes('LH') || operator.includes('한국토지주택')) return 'https://apply.lh.or.kr/lhapply/main.do';
+            if (operator.includes('SH') || operator.includes('서울주택도시공사')) return 'https://www.i-sh.co.kr/app/index.do';
+            if (operator.includes('GH') || operator.includes('경기주택도시공사')) return 'https://apply.gh.or.kr/';
+            return 'https://www.google.com/search?q=' + encodeURIComponent(title);
+        }
+
+        // 전역 Drawer 열기 함수
+        window.openDrawer = function(policyId, docId, linkUrl) {
+            currentDocId = docId;
+            currentPolicyId = policyId;
+            const data = drawerData[docId] || drawerData["DOC_DEFAULT"];
+            
+            // 링크 fallback 처리
+            const finalUrl = (linkUrl && linkUrl.includes("http")) ? linkUrl : "https://apply.lh.or.kr";
+            
+            document.getElementById('drawerTitle').innerText = data.title;
+            
+            // 체크리스트 동적 렌더링
+            document.getElementById('drawerChecklist').innerHTML = data.checklist.map((item, idx) => `
+                <label class="check-item">
+                    <input type="checkbox" class="doc-checkbox" id="chk_${docId}_${idx}">
+                    <div class="check-box"></div>
+                    <p class="check-text">${item}</p>
+                </label>
+            `).join('');
+
+            drawerOverlay.classList.add('show');
+            guideDrawer.classList.add('open');
+
+            // ★ 듀얼 뷰: 새 창 우측 배치 최적화 ★
+            const popupWidth = 900;
+            const popupHeight = 850;
+            const leftPos = Math.max(window.screen.width - popupWidth - 50, 950); 
+            window.open(finalUrl, '_blank', `width=${popupWidth},height=${popupHeight},left=${leftPos},top=50,scrollbars=yes`);
+        };
+
+        function closeDrawer() {
+            drawerOverlay.classList.remove('show');
+            guideDrawer.classList.remove('open');
+        }
+
+        document.getElementById('drawerBack').addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        // ★ 발급 완료 처리 및 성공 CTA 렌더링 ★
+        document.getElementById('btnCompleteDoc').addEventListener('click', function() {
+            if(!currentDocId || !currentPolicyId) return;
+            
+            alert(`[${document.getElementById('drawerTitle').innerText}] 서류 발급 상태가 완료로 업데이트 되었습니다! 🌟`);
+            
+            // 상태 업데이트
+            docCompletedStatus[currentPolicyId][currentDocId] = true; 
+            closeDrawer();
+            
+            // 버튼 상태 갱신
+            const btn = document.querySelector(`.doc-link-btn[data-docid="${currentDocId}"][data-policyid="${currentPolicyId}"]`);
+            if(btn) {
+                btn.classList.add('completed');
+                btn.innerHTML = '✅ 발급 완료';
+                btn.onclick = null;
+            }
+
+            // 전체 완료 체크 후 CTA 애니메이션 표시
+            const policy = mockPolicies.find(p => p.id === currentPolicyId);
+            const allCompleted = policy.docs.every(d => docCompletedStatus[currentPolicyId][d.docId]);
+            
+            if(allCompleted) {
+                const ctaBtn = document.getElementById(`cta_${currentPolicyId}`);
+                if(ctaBtn) {
+                    ctaBtn.style.display = 'block';
+                    ctaBtn.classList.add('fade-in-up');
+                }
+            }
+        });
+
+        // ----------------------------------------------------
+        // 5. 동적 정책 & 서류 데이터 세트 (Top 3 렌더링)
+        // ----------------------------------------------------
+        const mockPolicies = [
+            {
+                id: "PB-2026-001", matchRate: "98", title: "2026년 청년 전세임대 1순위 수시모집", operator: "한국토지주택공사(LH)", 
+                tags: [{ text: "트랙: 청년 전세임대" }, { text: "지역: 전국" }, { text: "접수중", hl: true }],
+                easyExplain: "LH에서 전세 보증금을 대신 내주고, 아주 저렴한 이자만 내며 살 수 있는 든든한 제도예요.",
+                recommendReason: "입력하신 소득 기준과 무주택 조건에 완벽히 부합하며, <strong>가장 큰 금액의 <span class=\"tooltip-trigger\">임차보증금<span class=\"tooltip-content\">주택을 임차하기 위해 소유권자에게 예탁한 보증금(전세금 등)입니다.</span></span> 지원 혜택</strong>을 받을 수 있어 1순위로 추천드려요! 🏡",
+                checkPoints: [
+                    "본인과 부모님의 무주택 여부를 다시 한 번 확인해 주세요.",
+                    "수도권 기준 최대 1.2억 원 한도 내에서 직접 집을 구해야 해요."
+                ],
+                docs: [
+                    { docId: "DOC_001", name: "주민등록표등본", agency: "정부24 발급", desc: "주민번호 13자리, 세대주 관계 등 상세 내역 포함", link: "https://plus.gov.kr/" },
+                    { docId: "DOC_003", name: "가족관계증명서", agency: "대법원 전자가족관계등록", desc: "본인 기준 '상세' 증명서로 발급", link: "https://efamily.scourt.go.kr/" },
+                    { docId: "DOC_013", name: "건강보험 자격득실", agency: "국민건강보험공단", desc: "근로소득 증빙을 위한 전체 이력 발급", link: "https://www.nhis.or.kr/" }
+                ]
+            },
+            {
+                id: "PB-2026-026", matchRate: "92", title: "경기남부 청년매입임대주택 예비입주자 모집", operator: "경기주택도시공사(GH)",
+                tags: [{ text: "트랙: 청년 매입임대" }, { text: "지역: 경기도" }],
+                easyExplain: "공사에서 직접 매입한 도심 내 주택을 시세보다 훨씬 저렴하게 임대해 주는 정책입니다.",
+                recommendReason: "경기도 거주 조건에 해당되며, <strong>서류 제출을 공공 마이데이터(MyMy)로 대체</strong>할 수 있어 지원 과정이 매우 간편합니다! ✨",
+                checkPoints: [
+                    "희망하는 주택의 위치와 면적을 공고문에서 미리 확인하세요.",
+                    "선착순이 아닌 자격 검증 후 순번 배정 방식입니다."
+                ],
+                docs: [
+                    { docId: "DOC_MYMY", name: "금융정보 등 제공 동의서", agency: "LH청약플러스", desc: "공공 마이데이터를 통해 자산/소득 자동 연계", link: "https://apply.lh.or.kr/", special: true, label: "✨ MyMy 연동" },
+                    { docId: "DOC_001", name: "주민등록표등본", agency: "정부24 발급", desc: "부모님과 세대 분리된 경우 부모님 등본 추가", link: "https://plus.gov.kr/" }
+                ]
+            },
+            {
+                id: "PB-2026-077", matchRate: "85", title: "청년·신혼부부 매입임대리츠주택 입주자 모집", operator: "서울주택도시공사(SH)",
+                tags: [{ text: "트랙: 매입임대리츠" }, { text: "지역: 광주/전남" }],
+                easyExplain: "주택도시기금과 리츠(REITs)가 결합하여 안정적으로 장기 거주를 지원하는 임대주택입니다.",
+                recommendReason: "소득 조건은 살짝 타이트하지만, 한 번 입주하면 <strong>최대 10년 이상 장기 거주 안정성</strong>이 매우 뛰어나 대안으로 훌륭한 정책이에요. 🦉",
+                checkPoints: [
+                    "일반 매입임대보다 보증금 비율이 다소 높을 수 있으니 자금 계획을 세워보세요."
+                ],
+                docs: [
+                    { docId: "DOC_001", name: "주민등록표등본", agency: "정부24 발급", desc: "입주자 모집 공고일 이후 발급분 필요", link: "https://plus.gov.kr/" },
+                    { docId: "DOC_003", name: "가족관계증명서", agency: "대법원 발급", desc: "혼인 및 부양가족 증빙 목적", link: "https://efamily.scourt.go.kr/" }
+                ]
+            }
+        ];
+
+        // 초기화
+        mockPolicies.forEach(p => { docCompletedStatus[p.id] = {}; });
+
+        function renderTop3(policies) {
+            const container = document.getElementById('top3ListContainer');
+            // 리셋(버그 수정 1번)
+            container.innerHTML = '';
+            
+            let html = '';
+
+            policies.forEach((p, idx) => {
+                const rankClass = idx === 0 ? 'top1' : '';
+                const rankText = idx === 0 ? '연구소 추천 1순위 🥇' : `추천 ${idx + 1}순위`;
+                
+                const metaHtml = p.tags.map(tag => 
+                    tag.hl ? `<span class="meta-tag highlight">${tag.text}</span>` 
+                           : `<span class="meta-tag">${tag.text}</span>`
+                ).join('');
+
+                const checkPointsHtml = p.checkPoints.map(cp => `<div class="check-point-item">${cp}</div>`).join('');
+
+                const docsHtml = p.docs.map(doc => {
+                    const isSp = doc.special ? 'special' : '';
+                    const agHtml = doc.special ? `<span class="doc-agency" style="background: rgba(240, 202, 94, 0.2); color: #8A6715;">${doc.label}</span>` : `<span class="doc-agency">${doc.agency}</span>`;
+                    
+                    const isCompleted = docCompletedStatus[p.id][doc.docId] === true;
+                    const btnClass = isCompleted ? 'doc-link-btn completed' : 'doc-link-btn';
+                    const btnText = isCompleted ? '✅ 발급 완료' : `${doc.agency.split(' ')[0]} 바로가기`;
+                    const btnAction = isCompleted ? '' : `onclick="openDrawer('${p.id}', '${doc.docId}', '${doc.link}')"`;
+
+                    return `
+                        <div class="doc-card ${isSp}">
+                            <div>
+                                <div class="doc-header"><span class="doc-name">${doc.name}</span>${agHtml}</div>
+                                <div class="doc-guide">${doc.desc}</div>
+                            </div>
+                            <button type="button" class="${btnClass}" data-policyid="${p.id}" data-docid="${doc.docId}" ${btnAction}>${btnText}</button>
+                        </div>
+                    `;
+                }).join('');
+
+                const policyLink = getPolicyLink(p.operator, p.title);
+                const allCompleted = p.docs.every(d => docCompletedStatus[p.id][d.docId]);
+                const ctaStyle = allCompleted ? 'display: flex;' : 'display: none;';
+
+                html += `
+                    <div class="policy-card">
+                        <div class="rank-badge ${rankClass}">${rankText}</div>
+                        
+                        <div class="card-header">
+                            <div class="card-header-left">
+                                <h3 class="match-title"><a href="javascript:void(0);" onclick="window.open('${policyLink}', '_blank')">${p.title}</a></h3>
+                                <div class="match-meta">${metaHtml}</div>
+                            </div>
+                            <div class="score-chart" style="background: conic-gradient(var(--main-olive) ${p.matchRate * 3.6}deg, #E9ECEF 0);">
+                                <div class="score-inner">${p.matchRate}<span>점</span></div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="info-section">
+                                <div class="info-title">📖 쉬운 설명</div>
+                                <div class="info-desc">${p.easyExplain}</div>
+                            </div>
+                            <div class="info-section" style="background-color: rgba(240, 202, 94, 0.15);">
+                                <div class="info-title">🏡 추천 이유</div>
+                                <div class="info-desc">${p.recommendReason}</div>
+                            </div>
+                            <div class="info-section" style="background-color: #F8F9FA; border: 1px solid #E9ECEF;">
+                                <div class="info-title">🦉 이것만 더 확인해주세요</div>
+                                <div class="check-points">${checkPointsHtml}</div>
+                            </div>
+                        </div>
+
+                        <div class="doc-section-title">📑 필요 서류 가이드</div>
+                        <div class="doc-grid">${docsHtml}</div>
+
+                        <button class="success-cta" id="cta_${p.id}" style="${ctaStyle}" onclick="showSuccessModal('${p.id}')">
+                            🎉 모든 서류 준비 완료! 실제 공고 신청하러 가기
+                        </button>
+                        
+                        <!-- 기존의 단순 아웃링크 버튼 -->
+                        <a href="javascript:void(0);" onclick="window.open('${policyLink}', '_blank')" class="official-link-btn" style="margin-top: 16px;">
+                            공식 신청 페이지 보러가기 ➔
+                        </a>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ----------------------------------------------------
+        // 6. 폼 제출 및 리셋 로직 시뮬레이터
+        // ----------------------------------------------------
+        document.getElementById('matchingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // ★ 1. 결과 화면 즉시 리셋 (핵심 버그 수정) ★
+            document.getElementById('top3ListContainer').innerHTML = '';
+
+            const isOwned = document.getElementById('housing_own_yes').checked;
+            
+            const waitingState = document.getElementById('waitingState');
+            const loadingState = document.getElementById('loadingState');
+            const resultState = document.getElementById('resultState');
+            
+            const inputs = document.querySelectorAll('.input-base, input[type="radio"], button[type="button"], textarea');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            inputs.forEach(el => el.disabled = true);
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="btn-spinner" style="display:block"></span><span>분석 중...</span>';
+
+            waitingState.classList.add('fade-out');
+            resultState.style.display = 'none'; // 결과창 확실히 숨김
+            
+            setTimeout(() => {
+                waitingState.style.display = 'none';
+                loadingState.style.display = 'flex'; 
+                loadingState.classList.add('fade-in-up');
+                
+                const dynamicText = document.getElementById('loadingDynamicText');
+                setTimeout(() => { dynamicText.innerText = "추천된 정책의 최신 기준(RAG)을 탐색하고 있어요."; }, 1000);
+                setTimeout(() => { dynamicText.innerText = "복잡한 행정 용어를 쉬운 말로 요약 중입니다 (LLM)."; }, 2200);
+
+                setTimeout(() => {
+                    loadingState.classList.replace('fade-in-up', 'fade-out');
+                    
+                    setTimeout(() => {
+                        loadingState.style.display = 'none';
+                        loadingState.classList.remove('fade-out');
+                        
+                        // ★ 유주택자 하드 필터링
+                        const container = document.getElementById('top3ListContainer');
+                        if(isOwned) {
+                            container.innerHTML = `
+                                <div class="error-card">
+                                    <h3>😭 아쉽게도 추천 가능한 정책이 없어요</h3>
+                                    <p>현재 대부분의 청년 주거 정책은 '무주택세대구성원'을 필수 요건으로 하고 있어요.<br>부모님 소유의 주택이라면 <strong>세대 분리</strong>를 통해 무주택 요건을 충족할 수 있는지 팁을 확인해 보세요!</p>
+                                </div>
+                            `;
+                        } else {
+                            renderTop3(mockPolicies); 
+                        }
+                        
+                        resultState.style.display = 'block';
+                        resultState.classList.add('fade-in-up');
+                        
+                        // ★ 입력 폼 복원 로직 (AI 소득 추정기가 열려있다면 income 인풋은 제외) ★
+                        inputs.forEach(el => {
+                            if (el.id === 'income' && document.getElementById('aiIncomeWrapper').classList.contains('show')) {
+                                return;
+                            }
+                            el.disabled = false;
+                        });
+                        
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = '조건 수정하여 다시 분석하기';
+                        
+                    }, 300);
+                }, 3500);
+
+            }, 300); 
+        });
+    </script>
+</body>
+</html>

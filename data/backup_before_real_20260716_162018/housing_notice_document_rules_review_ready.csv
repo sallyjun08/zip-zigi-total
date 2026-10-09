@@ -1,0 +1,21 @@
+﻿rule_id,notice_id,record_id,document_id,document_name,review_status,requirement_type,required_for,trigger_reason,submission_stage,submission_channel,mymy_eligible,source_file,source_page,condition_json,original_requirement_text,is_latest
+NOTICE_LH_001_R1,NOTICE_LH_001,REC_LH_001,DOC_RESIDENT,주민등록표 등본,미검수,공통,전체 신청자,가구와 주소 확인,서류제출,온라인 또는 우편,조건부,sample_lh_notice.pdf,3,{},개발용 샘플 공통서류: 주민등록표 등본,True
+NOTICE_LH_001_R2,NOTICE_LH_001,REC_LH_001,DOC_FAMILY,가족관계증명서,미검수,공통,전체 신청자,가족관계 확인,서류제출,온라인 또는 우편,조건부,sample_lh_notice.pdf,3,{},개발용 샘플 공통서류: 가족관계증명서,True
+NOTICE_LH_001_R3,NOTICE_LH_001,REC_LH_001,DOC_STUDENT,재학증명서,미검수,조건부,대학생 신청자,대학생 자격 확인,서류제출,온라인 또는 우편,N,sample_lh_notice.pdf,4,"{""applicant_type_student"": true}",개발용 샘플 조건부서류: 대학생은 재학증명서,True
+NOTICE_LH_001_R4,NOTICE_LH_001,REC_LH_001,DOC_JOB,건강보험 자격득실확인서,미검수,조건부,취업준비생 신청자,취업 상태 확인,서류제출,온라인 또는 우편,조건부,sample_lh_notice.pdf,4,"{""applicant_type_jobseeker"": true}",개발용 샘플 조건부서류: 취업준비생은 자격득실확인서,True
+NOTICE_LH_001_R5,NOTICE_LH_001,REC_LH_001,DOC_PROXY,위임장 및 대리인 신분증,미검수,조건부,대리 신청자,대리신청 확인,접수,방문,N,sample_lh_notice.pdf,5,"{""proxy_application"": true}",개발용 샘플 조건부서류: 대리신청 시 위임장,True
+NOTICE_HAPPY_001_R1,NOTICE_HAPPY_001,REC_HAPPY_001,DOC_RESIDENT,주민등록표 등본,미검수,공통,전체 신청자,가구와 주소 확인,서류제출,온라인 또는 우편,조건부,sample_happy_notice.pdf,3,{},개발용 샘플 공통서류: 주민등록표 등본,True
+NOTICE_HAPPY_001_R2,NOTICE_HAPPY_001,REC_HAPPY_001,DOC_FAMILY,가족관계증명서,미검수,공통,전체 신청자,가족관계 확인,서류제출,온라인 또는 우편,조건부,sample_happy_notice.pdf,3,{},개발용 샘플 공통서류: 가족관계증명서,True
+NOTICE_HAPPY_001_R3,NOTICE_HAPPY_001,REC_HAPPY_001,DOC_STUDENT,재학증명서,미검수,조건부,대학생 신청자,대학생 자격 확인,서류제출,온라인 또는 우편,N,sample_happy_notice.pdf,4,"{""applicant_type_student"": true}",개발용 샘플 조건부서류: 대학생은 재학증명서,True
+NOTICE_HAPPY_001_R4,NOTICE_HAPPY_001,REC_HAPPY_001,DOC_JOB,건강보험 자격득실확인서,미검수,조건부,취업준비생 신청자,취업 상태 확인,서류제출,온라인 또는 우편,조건부,sample_happy_notice.pdf,4,"{""applicant_type_jobseeker"": true}",개발용 샘플 조건부서류: 취업준비생은 자격득실확인서,True
+NOTICE_HAPPY_001_R5,NOTICE_HAPPY_001,REC_HAPPY_001,DOC_PROXY,위임장 및 대리인 신분증,미검수,조건부,대리 신청자,대리신청 확인,접수,방문,N,sample_happy_notice.pdf,5,"{""proxy_application"": true}",개발용 샘플 조건부서류: 대리신청 시 위임장,True
+NOTICE_JEONSE_001_R1,NOTICE_JEONSE_001,REC_JEONSE_001,DOC_RESIDENT,주민등록표 등본,미검수,공통,전체 신청자,가구와 주소 확인,서류제출,온라인 또는 우편,조건부,sample_jeonse_notice.pdf,3,{},개발용 샘플 공통서류: 주민등록표 등본,True
+NOTICE_JEONSE_001_R2,NOTICE_JEONSE_001,REC_JEONSE_001,DOC_FAMILY,가족관계증명서,미검수,공통,전체 신청자,가족관계 확인,서류제출,온라인 또는 우편,조건부,sample_jeonse_notice.pdf,3,{},개발용 샘플 공통서류: 가족관계증명서,True
+NOTICE_JEONSE_001_R3,NOTICE_JEONSE_001,REC_JEONSE_001,DOC_STUDENT,재학증명서,미검수,조건부,대학생 신청자,대학생 자격 확인,서류제출,온라인 또는 우편,N,sample_jeonse_notice.pdf,4,"{""applicant_type_student"": true}",개발용 샘플 조건부서류: 대학생은 재학증명서,True
+NOTICE_JEONSE_001_R4,NOTICE_JEONSE_001,REC_JEONSE_001,DOC_JOB,건강보험 자격득실확인서,미검수,조건부,취업준비생 신청자,취업 상태 확인,서류제출,온라인 또는 우편,조건부,sample_jeonse_notice.pdf,4,"{""applicant_type_jobseeker"": true}",개발용 샘플 조건부서류: 취업준비생은 자격득실확인서,True
+NOTICE_JEONSE_001_R5,NOTICE_JEONSE_001,REC_JEONSE_001,DOC_PROXY,위임장 및 대리인 신분증,미검수,조건부,대리 신청자,대리신청 확인,접수,방문,N,sample_jeonse_notice.pdf,5,"{""proxy_application"": true}",개발용 샘플 조건부서류: 대리신청 시 위임장,True
+NOTICE_VUL_001_R1,NOTICE_VUL_001,REC_VUL_001,DOC_RESIDENT,주민등록표 등본,미검수,공통,전체 신청자,가구와 주소 확인,서류제출,온라인 또는 우편,조건부,sample_vulnerable_notice.pdf,3,{},개발용 샘플 공통서류: 주민등록표 등본,True
+NOTICE_VUL_001_R2,NOTICE_VUL_001,REC_VUL_001,DOC_FAMILY,가족관계증명서,미검수,공통,전체 신청자,가족관계 확인,서류제출,온라인 또는 우편,조건부,sample_vulnerable_notice.pdf,3,{},개발용 샘플 공통서류: 가족관계증명서,True
+NOTICE_VUL_001_R3,NOTICE_VUL_001,REC_VUL_001,DOC_STUDENT,재학증명서,미검수,조건부,대학생 신청자,대학생 자격 확인,서류제출,온라인 또는 우편,N,sample_vulnerable_notice.pdf,4,"{""applicant_type_student"": true}",개발용 샘플 조건부서류: 대학생은 재학증명서,True
+NOTICE_VUL_001_R4,NOTICE_VUL_001,REC_VUL_001,DOC_JOB,건강보험 자격득실확인서,미검수,조건부,취업준비생 신청자,취업 상태 확인,서류제출,온라인 또는 우편,조건부,sample_vulnerable_notice.pdf,4,"{""applicant_type_jobseeker"": true}",개발용 샘플 조건부서류: 취업준비생은 자격득실확인서,True
+NOTICE_VUL_001_R5,NOTICE_VUL_001,REC_VUL_001,DOC_PROXY,위임장 및 대리인 신분증,미검수,조건부,대리 신청자,대리신청 확인,접수,방문,N,sample_vulnerable_notice.pdf,5,"{""proxy_application"": true}",개발용 샘플 조건부서류: 대리신청 시 위임장,True
